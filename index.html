@@ -30,6 +30,9 @@ button:hover{border-color:var(--pri);color:#fff}
 button.primary{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
 button.primary:hover{background:var(--pri2)}
 button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+a.btn{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:10px;
+  padding:9px 14px;font-size:14px;color:var(--tx);text-decoration:none;transition:.15s}
+a.btn:hover{border-color:var(--pri);color:#fff}
 button:disabled{opacity:.45;cursor:not-allowed}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .chip{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12.5px;color:var(--tx2)}
@@ -142,6 +145,13 @@ footer{max-width:900px;margin:0 auto;padding:0 16px 40px;color:var(--tx2);font-s
       <div class="row">
         <button id="btnGo">按以上条件开始</button>
         <span id="poolInfo" class="muted"></span>
+      </div>
+      <div class="panel" id="dlPanel" hidden style="margin:6px 0 0;background:var(--card2)">
+        <div class="row" style="margin:0">
+          <span class="muted">手机上装 Anki 用（点击下载后导入 AnkiDroid / AnkiMobile）：</span>
+          <a class="btn" href="anki-fill-cloze.csv" download>填空 Cloze 卡（107 张）</a>
+          <a class="btn" href="anki-basic.csv" download>选择/判断/名词/问答卡（446 张）</a>
+        </div>
       </div>
       <div class="panel" style="margin:6px 0 0;background:var(--card2)">
         <div class="row" style="margin:0">
@@ -753,6 +763,14 @@ function init() {
     if (k === 'F') toggleFav();
   });
   refreshHome();
+  // Anki 卡片下载入口：只在本页通过 http/https 打开时显示（部署到网址、局域网服务时都可用），
+  // 用 file:// 直接打开本地文件时隐藏，避免出现死链。
+  try {
+    var proto = (typeof location !== 'undefined' && location.protocol) || '';
+    if (proto === 'http:' || proto === 'https:') {
+      document.getElementById('dlPanel').hidden = false;
+    }
+  } catch (e) {}
 }
 init();
 </script>
